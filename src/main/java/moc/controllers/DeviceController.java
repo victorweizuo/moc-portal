@@ -28,7 +28,7 @@ public class DeviceController {
             return "failed";
         } else {
             String token=(String) httpSession.getAttribute("token");
-            if(RedisManager.getData(token)!=null){
+            if(RedisManager.getData(token+"/alldevices")!=null){
                 return RedisManager.getData(token+"/alldevices");
             }
             Gson gson = new Gson();

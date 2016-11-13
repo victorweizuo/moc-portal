@@ -37,7 +37,7 @@ public class RequestModel {
         RequestModel requestModel=new RequestModel();
         requestModel.setUrl(Config.host);
         requestModel.setPath(Config.hostpath+"/devicemanagement/retrieveall");
-        requestModel.getRequest_header().put("accesstoken","1DE66F89489A3FE44F3FBA15F1124AE709D7B9CBAC9A0EF70CFD1114CA848844A63331779E69AF5E");
+        requestModel.getRequest_header().put("accesstoken",token);
         requestModel.getRequest_header().put("timestamp","1447644285294");
         requestModel.getRequest_body().put("page","0");
         return requestModel;
