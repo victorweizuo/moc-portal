@@ -15,32 +15,17 @@ Ext.define('FleetOverview', {
         layout: 'fit',
         items: {
             xtype: 'gmappanel',
-            id:'fleetoverview_gmap',
-            center: {
-                geoCodeAddr: '陕西省西安市雁塔区',
-                marker: {
-                    lat: 34.19051,
-                    lng: 108.9583,
-                    title: 'Xi an',
-                    listeners: {
-                        click: function (e) {
-                            Ext.Msg.alert('It\'s fine',
-                                'and it\'s art.');
-                        }
-                    }
-                }
-            },
-            markers: [{
+            id: 'fleetoverview_gmap',
+            zoomLevel: 14,
+            gmapType: 'map',
+            mapConfOpts: ['enableScrollWheelZoom', 'enableDoubleClickZoom', 'enableDragging'],
+            mapControls: ['GSmallMapControl', 'GMapTypeControl'],
+            setCenter: {
                 lat: 34.19051,
-                lng: 108.9583,
-                title: 'Xi an',
-                listeners: {
-                    click: function (e) {
-                        Ext.Msg.alert('It\'s fine',
-                            'and it\'s art.');
-                    }
-                }
-            }]
+                lng: 108.9583
+            },
+            markers: [
+            ]
         }
     }, {
         xtype: 'panel',
@@ -48,18 +33,47 @@ Ext.define('FleetOverview', {
         width: '30%',
         items: [{
             xtype: 'combobox',
-            id:'fleetoverview_combo',
+            id: 'fleetoverview_combo',
             fieldLabel: 'Device List',
-            editable:false,
-            forceSelection:true,
+            editable: false,
+            forceSelection: true,
             displayField: 'devuuid',
             queryMode: 'local',
-            valueField:'devuuid',
+            valueField: 'devuuid',
             store: Ext.create('Ext.data.JsonStore', {
-                autoLoad:false,
+                autoLoad: false,
                 fields: ['devuuid'],
                 data: []
-            })
+            }),
+            listeners: {
+                select: function (combo, records, e) {
+                    var devuuid = (records[0].get('devuuid'));
+                    Ext.Ajax.request({
+                        url: '/device/getcurlocation',
+                        params: {
+                            devuuid: devuuid
+                        },
+                        method: 'POST',
+                        success: function (res) {
+                            var data = JSON.parse(res.responseText);
+                            var lat = data.lat;
+                            var lon = data.lon;
+                            var devuuid=data.devuuid;
+                            console.info(data);
+                            var point = new google.maps.LatLng(lat,lon);
+                            var marker = {
+                                title: devuuid,
+                                listeners:{
+                                    click: function(e){
+                                        alert(devuuid);
+                                    }
+                                }
+                            };
+                            Ext.getCmp('fleetoverview_gmap').addMarker(point,marker,false,true,marker.listeners);
+                        }
+                    });
+                }
+            }
 
         }]
 

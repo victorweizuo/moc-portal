@@ -52,6 +52,14 @@ Ext.define('MainWindow', {
                             layout: 'fit',
                             items: [Ext.create('DeviceOverview')]
                         });
+                        Ext.Ajax.request({
+                            url: '/device/retrieveall',
+                            method: 'POST',
+                            success: function (res) {
+                                var data = JSON.parse(res.responseText);
+                                Ext.getCmp("deviceoverview_combo").getStore().loadData(data);
+                            }
+                        });
                     }
                     else if (record.raw.id == 'controlandconfiguration') {
                         tabname = 'Control and Configuration';

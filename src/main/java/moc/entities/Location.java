@@ -11,4 +11,5 @@ import lombok.Data;
 public class Location {
     public double lat;
     public double lon;
+    public String devuuid;
 }

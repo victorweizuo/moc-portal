@@ -10,8 +10,8 @@ import java.util.List;
  * Created by Administrator on 2016/10/23.
  */
 public interface DeviceService {
-    public Device getDevice(String uuid);
+    public Device getDevice(String uuid,String token);
     public List<Device> getDevices(String token);
 
-    Location getDeviceLocation(String devuuid, Object token);
+    Location getDeviceLocation(String devuuid, String token);
 }

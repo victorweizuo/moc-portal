@@ -38,6 +38,23 @@ public class DeviceController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/retrieveone")
+    public String retrieveOneDevices(String devuuid,HttpSession httpSession) {
+        if (httpSession.getAttribute("token") == null) {
+            log.info("failed");
+            return "failed";
+        } else {
+            String token=(String) httpSession.getAttribute("token");
+            if(RedisManager.getData(token+"/onedevice")!=null){
+                return RedisManager.getData(token+"/onedevice");
+            }
+            Gson gson = new Gson();
+            String result=gson.toJson(deviceService.getDevice(devuuid,token));
+            RedisManager.setData(token+"onedevice",result);
+            return result;
+        }
+    }
+
     @RequestMapping(method = RequestMethod.POST,path="/getcurlocation")
     public String getDeviceLocation(String devuuid,HttpSession httpSession){
         if (httpSession.getAttribute("token") == null){
@@ -45,10 +62,9 @@ public class DeviceController {
             return "failed";
         }
         else{
-
             if(RedisManager.getData(devuuid)==null) {
                 Gson gson = new Gson();
-                String result=gson.toJson(deviceService.getDeviceLocation(devuuid, httpSession.getAttribute("token")));
+                String result=gson.toJson(deviceService.getDeviceLocation(devuuid, (String) httpSession.getAttribute("token")));
                 RedisManager.setData(devuuid+"/curlocation",result);
                 return result;
             }

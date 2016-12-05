@@ -32,10 +32,79 @@ public class DeviceTest {
         RequestModel requestModel=new RequestModel();
         requestModel.setUrl("https://120.24.254.19");
         requestModel.setPath("moc-server-sandbox/devicestatus/servermappingget");
-        requestModel.getRequest_header().put("accesstoken","09F54EACA751F95551B8FE98D675518517B11C9ECA937BBB10ADDD11D7CBC663E0D31AE7E58C5CA0");
+        requestModel.getRequest_header().put("accesstoken","FE51DCE57A372DAB6DB8A854AD95A73272E1485696A3A6565FA4A3D2CD8B6DBB00561813CDD4C448");
         requestModel.getRequest_header().put("timestamp","1447644285294");
-        requestModel.getRequest_body().put("deviceuuid","c5271d2d3ace42e9bc52310e30bc3e98");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
         requestModel.getRequest_body().put("propertyname","gpscurlocation");
+        RemoteConnector remoteConnector=RemoteConnector.getInstance();
+        String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
+        System.out.println(resultString);
+    }
+
+    @Test
+    public void testGetOneDevice(){
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setPath("moc-server-sandbox/devicemanagement/retrieveone");
+        requestModel.getRequest_header().put("accesstoken","95C668D19AAF34936475856CCFA7125EF23A6C953D0E687EBF4377C643699CE6AB16237FB3465C3A");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
+        RemoteConnector remoteConnector=RemoteConnector.getInstance();
+        String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
+        System.out.println(resultString);
+    }
+
+    @Test
+    public void testGetDeviceRFID(){
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setPath("moc-server-sandbox/deviceconfig/servermappingget");
+        requestModel.getRequest_header().put("accesstoken","95C668D19AAF34936475856CCFA7125EF23A6C953D0E687EBF4377C643699CE6AB16237FB3465C3A");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
+        requestModel.getRequest_body().put("propertyname","rfid");
+        RemoteConnector remoteConnector=RemoteConnector.getInstance();
+        String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
+        System.out.println(resultString);
+    }
+
+    @Test
+    public void testGetDeviceCentralLock(){
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setPath("moc-server-sandbox/devicestatus/servermappingget");
+        requestModel.getRequest_header().put("accesstoken","95C668D19AAF34936475856CCFA7125EF23A6C953D0E687EBF4377C643699CE6AB16237FB3465C3A");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
+        requestModel.getRequest_body().put("propertyname","centrallock");
+        RemoteConnector remoteConnector=RemoteConnector.getInstance();
+        String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
+        System.out.println(resultString);
+    }
+
+    @Test
+    public void testGetDeviceImmobilizer(){
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setPath("moc-server-sandbox/devicestatus/servermappingget");
+        requestModel.getRequest_header().put("accesstoken","95C668D19AAF34936475856CCFA7125EF23A6C953D0E687EBF4377C643699CE6AB16237FB3465C3A");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
+        requestModel.getRequest_body().put("propertyname","immobilizer");
+        RemoteConnector remoteConnector=RemoteConnector.getInstance();
+        String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
+        System.out.println(resultString);
+    }
+
+    @Test
+    public void testGetDeviceBTConnectedDevice(){
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setPath("moc-server-sandbox/devicestatus/servermappingget");
+        requestModel.getRequest_header().put("accesstoken","95C668D19AAF34936475856CCFA7125EF23A6C953D0E687EBF4377C643699CE6AB16237FB3465C3A");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("deviceuuid","2dcc5cdcddb3449d98ad5c8fcbdb0c0f");
+        requestModel.getRequest_body().put("propertyname","btcurcondevaddr");
         RemoteConnector remoteConnector=RemoteConnector.getInstance();
         String resultString= JsonUtil.encode(remoteConnector.getInstance().requestMap(requestModel));
         System.out.println(resultString);
