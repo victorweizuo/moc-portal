@@ -60,6 +60,16 @@ Ext.define('MainWindow', {
                                 Ext.getCmp("deviceoverview_combo").getStore().loadData(data);
                             }
                         });
+                        Ext.Ajax.request({
+                            url: '/device/getdeviceevents',
+                            method: 'POST',
+                            success: function (res) {
+                                var data = JSON.parse(res.responseText);
+                                console.info(data);
+                                Ext.getCmp("eventstasticschart").getStore().loadData(data);
+                            }
+                        });
+
                     }
                     else if (record.raw.id == 'controlandconfiguration') {
                         tabname = 'Control and Configuration';
@@ -69,6 +79,14 @@ Ext.define('MainWindow', {
                             id: record.raw.id + "_tab",
                             layout: 'fit',
                             items: [Ext.create('ControlAndConfiguration')]
+                        });
+                        Ext.Ajax.request({
+                            url: '/device/retrieveall',
+                            method: 'POST',
+                            success: function (res) {
+                                var data = JSON.parse(res.responseText);
+                                Ext.getCmp("controlandconfigurationcombo").getStore().loadData(data);
+                            }
                         });
                     }
                     else if (record.raw.id == 'addnewdevice') {
@@ -89,6 +107,14 @@ Ext.define('MainWindow', {
                             id: record.raw.id + "_tab",
                             layout: 'fit',
                             items: [Ext.create('FleetEvent')]
+                        });
+                        Ext.Ajax.request({
+                            url: '/device/retrieveall',
+                            method: 'POST',
+                            success: function (res) {
+                                var data = JSON.parse(res.responseText);
+                                Ext.getCmp("fleetevent_combo").getStore().loadData(data);
+                            }
                         });
                     }
                     else if (record.raw.id == 'usersetting') {

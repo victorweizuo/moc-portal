@@ -61,12 +61,12 @@ public class RemoteConnector {
     }
 
     public Map<String, String> requestMap(RequestModel requestModel) {
-        String resultString=requestString(requestModel);
+        String resultString = requestString(requestModel);
         Map<String, String> result = JsonUtil.decode(resultString, Map.class);
         return result;
     }
 
-    public String requestString(RequestModel requestModel){
+    public String requestString(RequestModel requestModel) {
         HostnameVerifier allHostsValid = (hostname, session) -> true;
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         ClientConfig config = new DefaultClientConfig();
@@ -76,19 +76,19 @@ public class RemoteConnector {
         String paras = JsonUtil.encode(requestModel);
         JSONObject inputJsonObj = new JSONObject(paras);
 
-        String[] paths=requestModel.getPath().split("/");
-        for(String path:paths){
-            service=service.path(path);
+        String[] paths = requestModel.getPath().split("/");
+        for (String path : paths) {
+            service = service.path(path);
         }
-        ClientResponse resp=service.type(MediaType.APPLICATION_JSON_TYPE)
+        ClientResponse resp = service.type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, inputJsonObj.toString());
         String resultString = resp.getEntity(String.class);
         return resultString;
     }
 
-    public JsonObject requestJsonObject(RequestModel requestModel){
-        Gson gson=new Gson();
-        JsonObject jsonObject=gson.fromJson(requestString(requestModel),JsonObject.class);
+    public JsonObject requestJsonObject(RequestModel requestModel) {
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(requestString(requestModel), JsonObject.class);
         log.info(jsonObject.toString());
         return jsonObject;
     }

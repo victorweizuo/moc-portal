@@ -10,4 +10,6 @@ public class DeviceStatus {
     private String parameter;
     private String status;
     private String lastUpdateTime;
+    private String propertyName;
+    private String action;
 }

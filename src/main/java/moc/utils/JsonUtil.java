@@ -1,21 +1,27 @@
 package moc.utils;
 
 
-import jodd.json.JsonParser;
-import jodd.json.JsonSerializer;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by Administrator on 2016/9/17.
  */
 public class JsonUtil {
-    private static JsonSerializer serializer=new JsonSerializer();
-    private static JsonParser parser=new JsonParser();
+    private static Gson gson=new Gson();
 
     public static String encode(Object object){
-        return serializer.serialize(object);
+
+        return gson.toJson(object);
     }
 
     public static <T> T decode(String json,Class<T> clazz){
-        return parser.parse(json,clazz);
+
+        return gson.fromJson(json,clazz);
+    }
+
+    public static <T> T decode(String json,Type type){
+        return gson.fromJson(json,type);
     }
 }
