@@ -158,5 +158,18 @@ public class DeviceController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/getfleeteventsoverview")
+    public String getFleetEventsOverview(String startDate,String endDate,HttpSession httpSession) {
+        if (httpSession.getAttribute("token") == null) {
+            log.info("Get token failed.");
+            return "failed";
+        } else {
+            Gson gson = new Gson();
+            String result = gson.toJson(deviceService.getFleetEventsOverview(startDate,endDate,(String) httpSession.getAttribute("token")));
+            return result;
+        }
+    }
+
+
 
 }

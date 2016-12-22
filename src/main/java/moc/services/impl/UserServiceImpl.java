@@ -19,4 +19,10 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public String changePassword(String username,String password, String passwordreset) {
+        JsonObject result = RemoteConnector.getInstance().requestJsonObject(RequestModel.changePassword(username,password, passwordreset));
+        return result.getAsJsonObject("response_body").get("resultdesc").getAsString();
+    }
 }

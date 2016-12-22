@@ -78,6 +78,19 @@ Ext.define('FleetEvent', {
                             Ext.getCmp("fleetevent_statisticgrid").getStore().loadData(data);
                         }
                     });
+
+                    Ext.Ajax.request({
+                        url: '/device/getfleeteventsoverview',
+                        params: {
+                            startDate: startTimestamp,
+                            endDate: endTimestamp
+                        },
+                        method: 'POST',
+                        success: function (res) {
+                            var data = JSON.parse(res.responseText);
+                            Ext.getCmp("fleetevent_eventoverview").getStore().loadData(data);
+                        }
+                    });
                 }
             }]
         }]
@@ -103,7 +116,7 @@ Ext.define('FleetEvent', {
                     xtype: 'label', padding: '0 0 0 20', style: ' font-size: 22px ', text: 'Event Stastics'
                 }, {
                     xtype: 'chart', width: 350, height: 200, style: 'background:#fff',
-                    animate: true, shadow: true,id:'fleetevent_chart',
+                    animate: true, shadow: true, id: 'fleetevent_chart',
                     store: Ext.create('Ext.data.Store', {
                         fields: ['devuuid', 'eventcount'], data: []
                     }),
@@ -121,7 +134,7 @@ Ext.define('FleetEvent', {
                         xField: 'devuuid', yField: ['eventcount']
                     }]
                 }, {
-                    xtype: 'gridpanel',id:'fleetevent_statisticgrid',
+                    xtype: 'gridpanel', id: 'fleetevent_statisticgrid',
                     store: Ext.create('Ext.data.Store', {
                         fields: ['parameter', 'total',
                             'perday'],
@@ -160,46 +173,9 @@ Ext.define('FleetEvent', {
             },
             margin: '20 0 0 0', width: 450, height: 500, border: true,
             items: [{
-                xtype: 'gridpanel',
+                xtype: 'gridpanel', id: 'fleetevent_eventoverview',
                 store: Ext.create('Ext.data.Store', {
-                    fields: ['type', 'updatetime', 'functionarea',
-                        'action'],
-                    data: {
-                        'items': [{
-                            'type': "API call", 'updatetime': '23.07 11:30',
-                            'functionarea': 'Central lock', 'action': 'lock'
-                        }, {
-                            'type': "Device event", 'updatetime': '23.07 11:30', 'functionarea': 'Immobiliser',
-                            'action': 'lock'
-                        }, {
-                            'type': "API call", 'updatetime': '23.07 11:30',
-                            'functionarea': 'BT use', 'action': 'lock'
-                        }, {
-                            'type': "API call", 'updatetime': '23.07 11:30',
-                            'functionarea': 'Main board', 'action': 'lock'
-                        }, {
-                            'type': "API call", 'updatetime': '23.07 11:30',
-                            'functionarea': 'BT module', 'action': 'lock'
-                        }, {
-                            'type': "API call", 'updatetime': '23.07 11:30',
-                            'functionarea': 'Current BT <br/> connected device', 'action': 'lock'
-                        }, {
-                            'type': "Device event", 'updatetime': '23.07 11:30',
-                            'functionarea': 'OBD module', 'action': 'lock'
-                        }, {
-                            'type': "Device event", 'updatetime': '23.07 11:30',
-                            'functionarea': 'GPRS module', 'action': 'lock'
-                        }, {
-                            'type': "Device event", 'updatetime': '23.07 11:30',
-                            'functionarea': 'GPRS connection', 'action': 'lock'
-                        }]
-                    },
-                    proxy: {
-                        type: 'memory',
-                        reader: {
-                            type: 'json', root: 'items'
-                        }
-                    }
+                    fields: ['type', 'updatetime', 'functionarea', 'action'], data: [],
                 }),
                 height: 300, title: 'Event overview', width: 450, margin: '20 0 0 0',
                 columns: [{

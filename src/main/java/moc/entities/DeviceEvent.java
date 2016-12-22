@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class DeviceEvent {
     private String createTime="";
-    private String deviceUui="";
+    private String deviceUuid="";
     private String propertyName="";
     private String propertyValue="";
 }

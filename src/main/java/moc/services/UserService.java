@@ -7,4 +7,6 @@ import com.google.gson.JsonObject;
  */
 public interface UserService {
     public JsonObject validate(String username, String password);
+
+    String changePassword(String username,String password, String passwordreset);
 }

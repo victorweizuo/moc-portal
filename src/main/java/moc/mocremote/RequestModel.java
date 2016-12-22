@@ -1,5 +1,6 @@
 package moc.mocremote;
 
+import com.google.gson.JsonObject;
 import jodd.json.meta.JSON;
 import lombok.Data;
 import moc.entities.Device;
@@ -231,6 +232,17 @@ public class RequestModel {
         requestModel.getRequest_body().put("startdate", format.format(start));
         requestModel.getRequest_body().put("enddate", format.format(end));
         requestModel.getRequest_body().put("page", "1");
+        return requestModel;
+    }
+
+    public static RequestModel changePassword(String username,String password, String passwordreset) {
+        RequestModel requestModel=new RequestModel();
+        requestModel.setUrl(Config.host);
+        requestModel.setPath(Config.hostpath +"/usermanagement/passwordchange");
+        requestModel.getRequest_header().put("timestamp","1447644285294");
+        requestModel.getRequest_body().put("username",username);
+        requestModel.getRequest_body().put("password",password);
+        requestModel.getRequest_body().put("passwordchange",passwordreset);
         return requestModel;
     }
 }

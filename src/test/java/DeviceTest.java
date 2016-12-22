@@ -25,9 +25,9 @@ public class DeviceTest extends TestBase {
     public void testRetrieveAllDevices() {
         String token = getToken();
         RequestModel requestModel = new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl("https://sandbox.mobilityoncloud.com");
         requestModel.setPath("moc-server-sandbox/devicemanagement/retrieveall");
-        requestModel.getRequest_header().put("accesstoken", token);
+        requestModel.getRequest_header().put("accesstoken", getToken());
         requestModel.getRequest_header().put("timestamp", "1447644285294");
         requestModel.getRequest_body().put("page", "0");
         RemoteConnector remoteConnector = RemoteConnector.getInstance();
@@ -84,7 +84,7 @@ public class DeviceTest extends TestBase {
     @Test
     public void testSetOneDevice() {
         RequestModel requestModel = new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl("https://sandbox.mobilityoncloud.com");
         requestModel.setPath("moc-server-sandbox/devicemanagement/modify");
         requestModel.getRequest_header().put("accesstoken", getToken());
         requestModel.getRequest_header().put("timestamp", "1447644285294");

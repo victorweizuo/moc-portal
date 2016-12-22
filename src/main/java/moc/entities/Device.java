@@ -15,4 +15,5 @@ public class Device {
     private String deviceserialno="";
     private String devuuid="";
     private String inuse="";
+    private String plate_vin="";
 }

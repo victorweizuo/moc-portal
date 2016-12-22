@@ -28,4 +28,6 @@ public interface DeviceService {
     List<Map<String,String>> getDeviceEventsByTime(String startDate, String endDate, String token);
 
     List<DeviceStatistic>  getDeviceStatisticsByTime(String startDate, String endDate, String token);
+
+    List<Map<String,String>> getFleetEventsOverview(String startDate,String endDate,String token);
 }

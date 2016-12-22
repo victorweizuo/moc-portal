@@ -12,11 +12,11 @@ Ext.define('DeviceOverview', {
         },
         width: "75%", margin: 30, height: 50,
         items: [{
-            xtype: 'combobox', id: 'deviceoverview_combo', fieldLabel: 'Device List', displayField: 'device',
-            queryMode: 'local', valueField: 'devuuid', editable: false, forceSelection: true, displayField: 'devuuid',
+            xtype: 'combobox', id: 'deviceoverview_combo', fieldLabel: 'Device List',
+            queryMode: 'local', valueField: 'devuuid', editable: false, forceSelection: true, displayField: 'plate_vin',
             store: Ext.create('Ext.data.Store', {
                 autoLoad: false,
-                fields: ['devuuid'],
+                fields: ['devuuid','plate_vin'],
                 data: []
             }),
             listeners: {

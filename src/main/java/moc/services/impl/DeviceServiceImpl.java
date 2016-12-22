@@ -1,5 +1,6 @@
 package moc.services.impl;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -9,13 +10,11 @@ import moc.mocremote.RequestModel;
 import moc.services.DeviceService;
 import moc.utils.JsonUtil;
 import netscape.javascript.JSUtil;
+import org.apache.commons.codec.StringEncoderComparator;
 import org.springframework.core.convert.TypeDescriptor;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +34,8 @@ public class DeviceServiceImpl implements DeviceService {
         String devicebtsppmac = result.get("devicebtsppmac").getAsString();
         String inuse = result.get("inuse").getAsString();
         String deviceserialno = result.get("deviceserialno").getAsString();
-//        String plate_vin = result.get.get("plate_vin").getAsString();
-        return new Device(devicebtblemac, devicebtsppmac, devicesmsno, deviceserialno, devuuid, inuse);
+        String plate_vin = result.get("plate_vin").getAsString();
+        return new Device(devicebtblemac, devicebtsppmac, devicesmsno, deviceserialno, devuuid, inuse, plate_vin);
     }
 
     @Override
@@ -217,10 +216,10 @@ public class DeviceServiceImpl implements DeviceService {
         for (Device device : devices) {
             String devuuid = device.getDevuuid();
             List<DeviceEvent> deviceEventsResult = getDeviceEventsByTime(devuuid, startDate, endDate, token);
-            if(deviceEventsResult==null){
+            if (deviceEventsResult == null) {
                 eventStatistic.setTotal("0");
-            }
-            else eventStatistic.setTotal(Integer.parseInt(eventStatistic.getTotal()) + Integer.toString(deviceEventsResult.size()));
+            } else
+                eventStatistic.setTotal(Integer.toString(Integer.parseInt(eventStatistic.getTotal()) + deviceEventsResult.size()));
         }
         eventStatistic.setPerday((eventStatistic.getTotal()));
         result.add(eventStatistic);
@@ -231,7 +230,7 @@ public class DeviceServiceImpl implements DeviceService {
         for (Device device : devices) {
             String devuuid = device.getDevuuid();
             List<DeviceAPI> deviceAPIResults = getDeviceAPICallsByTime(devuuid, startDate, endDate, token);
-            apiStatistic.setTotal(Integer.parseInt(apiStatistic.getTotal()) + Integer.toString(deviceAPIResults.size()));
+            apiStatistic.setTotal(Integer.toString(Integer.parseInt(apiStatistic.getTotal()) + deviceAPIResults.size()));
         }
         apiStatistic.setPerday((apiStatistic.getTotal()));
         result.add(apiStatistic);
@@ -240,12 +239,43 @@ public class DeviceServiceImpl implements DeviceService {
         heartBeatStatistic.setParameter("Heart Beats");
         for (Device device : devices) {
             String devuuid = device.getDevuuid();
-            List<DeviceEvent> heartBeatsResults = getDeviceEventsByTime(devuuid, startDate, endDate, token).stream()
+            List<DeviceEvent> deviceEvents = getDeviceEventsByTime(devuuid, startDate, endDate, token);
+
+            List<DeviceEvent> heartBeatsResults = deviceEvents.stream()
                     .filter(deviceEvent -> deviceEvent.getPropertyName().equals("heartbeat")).collect(Collectors.toList());
-            heartBeatStatistic.setTotal(Integer.parseInt(heartBeatStatistic.getTotal()) + Integer.toString(heartBeatsResults.size()));
+            heartBeatStatistic.setTotal(Integer.toString(Integer.parseInt(heartBeatStatistic.getTotal()) + heartBeatsResults.size()));
         }
         heartBeatStatistic.setPerday((heartBeatStatistic.getTotal()));
         result.add(heartBeatStatistic);
+        return result;
+    }
+
+    @Override
+    public List<Map<String, String>> getFleetEventsOverview(String startDate, String endDate, String token) {
+        List<Device> devices = getDevices(token);
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Device device : devices) {
+            String devuuid = device.getDevuuid();
+            List<DeviceEvent> deviceEvents = getDeviceEventsByTime(devuuid, startDate, endDate, token);
+            List<DeviceAPI> deviceAPIs = getDeviceAPICallsByTime(devuuid, startDate, endDate, token);
+
+            deviceEvents.forEach(deviceEvent -> {
+                Map<String, String> kv = new HashMap<>();
+                kv.put("type", "Device Event");
+                kv.put("updatetime", deviceEvent.getCreateTime());
+                kv.put("functionarea", deviceEvent.getPropertyName());
+                kv.put("action", "Empty");
+                result.add(kv);
+            });
+            deviceAPIs.forEach(deviceAPI -> {
+                Map<String, String> kv = new HashMap<>();
+                kv.put("type", "API Call");
+                kv.put("updatetime", deviceAPI.getApicalltime());
+                kv.put("functionarea", deviceAPI.getApiuniqueid());
+                kv.put("action", "Empty");
+                result.add(kv);
+            });
+        }
         return result;
     }
 
@@ -279,10 +309,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     private List<DeviceEvent> getDeviceEventsByTime(String devuuid, String startDate, String endDate, String token) {
         JsonObject jsonObject = RemoteConnector.getInstance().requestJsonObject(RequestModel.getDeviceEventsByTime(devuuid, startDate, endDate, token));
-        if (!jsonObject.has("response_body")) return null;
-        if (!jsonObject.getAsJsonObject("response_body").has("resultlist")) return null;
-        if (!jsonObject.getAsJsonObject("response_body").get("resultlist").isJsonArray()) return null;
-        if (jsonObject.getAsJsonObject("response_body").getAsJsonArray("resultlist").size() == 0) return null;
+        if (!jsonObject.has("response_body")) return Lists.newArrayList();
+        if (!jsonObject.getAsJsonObject("response_body").has("resultlist")) return Lists.newArrayList();
+        if (!jsonObject.getAsJsonObject("response_body").get("resultlist").isJsonArray()) return Lists.newArrayList();
+        if (jsonObject.getAsJsonObject("response_body").getAsJsonArray("resultlist").size() == 0)
+            return Lists.newArrayList();
         String requestResult = jsonObject.getAsJsonObject("response_body").get("resultlist").toString();
         Type type = new TypeToken<List<DeviceEvent>>() {
         }.getType();
@@ -292,10 +323,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     private List<DeviceAPI> getDeviceAPICalls(String devuuid, String token) {
         JsonObject jsonObject = RemoteConnector.getInstance().requestJsonObject(RequestModel.getDeviceAPICalls(devuuid, token));
-        if (!jsonObject.has("response_body")) return null;
-        if (!jsonObject.getAsJsonObject("response_body").has("resultlist")) return null;
-        if (!jsonObject.getAsJsonObject("response_body").get("resultlist").isJsonArray()) return null;
-        if (jsonObject.getAsJsonObject("response_body").getAsJsonArray("resultlist").size() == 0) return null;
+        if (!jsonObject.has("response_body")) return Lists.newArrayList();
+        if (!jsonObject.getAsJsonObject("response_body").has("resultlist")) return Lists.newArrayList();
+        if (!jsonObject.getAsJsonObject("response_body").get("resultlist").isJsonArray()) return Lists.newArrayList();
+        if (jsonObject.getAsJsonObject("response_body").getAsJsonArray("resultlist").size() == 0)
+            return Lists.newArrayList();
         String requestResult = jsonObject.getAsJsonObject("response_body").get("resultlist").toString();
         Type type = new TypeToken<List<DeviceAPI>>() {
         }.getType();

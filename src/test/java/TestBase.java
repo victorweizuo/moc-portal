@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TestBase {
     public String getToken(){
         RequestModel requestModel=new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl("https://sandbox.mobilityoncloud.com");
         requestModel.setPath("moc-server-sandbox/token/generaltokenget");
         requestModel.getRequest_header().put("timestamp","1447644285294");
         requestModel.getRequest_body().put("appid","MoC-020009805154");
