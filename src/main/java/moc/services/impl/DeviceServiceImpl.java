@@ -9,9 +9,6 @@ import moc.mocremote.RemoteConnector;
 import moc.mocremote.RequestModel;
 import moc.services.DeviceService;
 import moc.utils.JsonUtil;
-import netscape.javascript.JSUtil;
-import org.apache.commons.codec.StringEncoderComparator;
-import org.springframework.core.convert.TypeDescriptor;
 
 import java.lang.reflect.Type;
 import java.util.*;
