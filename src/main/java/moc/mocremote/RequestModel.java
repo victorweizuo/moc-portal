@@ -172,7 +172,7 @@ public class RequestModel {
 
     public static RequestModel saveDevice(String devuuid, String propertyName, String smsno, String token) {
         RequestModel requestModel = new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl(Config.hostpath);
         requestModel.setPath("moc-server-sandbox/devicemanagement/modify");
         requestModel.getRequest_header().put("accesstoken", token);
         requestModel.getRequest_header().put("timestamp", "1447644285294");
@@ -183,7 +183,7 @@ public class RequestModel {
 
     public static RequestModel addDevice( String serialno,String platvin, String token) {
         RequestModel requestModel = new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl(Config.hostpath);
         requestModel.setPath("moc-server-sandbox/devicemanagement/add");
         requestModel.getRequest_header().put("accesstoken", token);
         requestModel.getRequest_header().put("timestamp", "1447644285294");
@@ -194,7 +194,7 @@ public class RequestModel {
 
     public static RequestModel getDeviceStatus(String devuuid, String propertyName, String token) {
         RequestModel requestModel = new RequestModel();
-        requestModel.setUrl("https://120.24.254.19");
+        requestModel.setUrl(Config.hostpath);
         requestModel.setPath("moc-server-sandbox/devicestatus/servermappingget");
         requestModel.getRequest_header().put("accesstoken", token);
         requestModel.getRequest_header().put("timestamp", "1447644285294");
